@@ -426,35 +426,35 @@ void CCalculatorDlg::dotOperation(Calculator::ActionType operation, bool handleN
 }
 void CCalculatorDlg::OnBnClickedButtonPlus()
 {
-	// TODO: 北兜矪瞶盽Α祘Α絏
+	dotOperation(Calculator::ActionType::Plus);
 }
 
 
 void CCalculatorDlg::OnBnClickedButtonMinus()
 {
-	// TODO: 北兜矪瞶盽Α祘Α絏
+	dotOperation(Calculator::ActionType::Minus);
 }
 
 
 void CCalculatorDlg::OnBnClickedButtonMultiply()
 {
-	// TODO: 北兜矪瞶盽Α祘Α絏
+	dotOperation(Calculator::ActionType::Multiply);
 }
 
 
 void CCalculatorDlg::OnBnClickedButtonDivided()
 {
-	// TODO: 北兜矪瞶盽Α祘Α絏
+	dotOperation(Calculator::ActionType::Divide);
 }
 
 
 void CCalculatorDlg::OnBnClickedButtonClear()
 {
-	// TODO: 北兜矪瞶盽Α祘Α絏
+	reset();
 }
 
 
 void CCalculatorDlg::OnBnClickedButtonEqual()
 {
-	// TODO: 北兜矪瞶盽Α祘Α絏
+	dotOperation(Calculator::ActionType::Equals);
 }
