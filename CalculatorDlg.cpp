@@ -6,6 +6,8 @@
 #include "Calculator.h"
 #include "CalculatorDlg.h"
 #include "afxdialogex.h"
+#include <stdlib.h>
+#include <sstream>
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -167,7 +169,7 @@ BOOL CCalculatorDlg::OnInitDialog()
 	m_buttonDivided.SetFont(&OutputFont);
 	m_buttonEqual.SetFont(&OutputFont);
 	m_buttonClear.SetFont(&OutputFont);
-
+	reset();
 	// TODO: Add extra initialization here
 
 	return TRUE;  // return TRUE  unless you set the focus to a control
@@ -244,7 +246,8 @@ void CCalculatorDlg::AddDigit(char digit){
 	//UpdateData(FALSE);
 	if(m_error_Input)
 		return;
-	if(m_calculator.isOperation(m_calculator.getLastInput().actionType) && !m_firstDigitEntered){
+	UpdateData();
+	if(m_calculator.isOperation(m_calculator.getLastInput().m_actionType) && !m_firstDigitEntered){
 		m_DisplayResult = digit;
 	}
 	else{
@@ -254,7 +257,7 @@ void CCalculatorDlg::AddDigit(char digit){
 			m_DisplayResult = digit;
 		}
 		else
-			m_DisplayResult = digit;
+			m_DisplayResult += digit;
 	}
 	m_firstDigitEntered = TRUE;
 	UpdateData(FALSE);
@@ -327,13 +330,13 @@ void CCalculatorDlg::createHistoryText()
 	m_DisplayHistory = "";
 	int historySize = m_calculator.getActionsSize();
 	for(int i =0; i< historySize; i++){
-		switch (m_calculator.getAction(i).actionType){
-		case Calculator:: ActionType::Number:
+		switch (m_calculator.getAction(i).m_actionType){
+		case ActionType::Number:
 			{
 				CString strNumber;
-				std::stringstream ss;
-				ss<< m_calculator.getAction(i).value;
-				std::string stdNum == ss.str();
+				std::stringstream ss; // involve in two header file -> stdlib.h and sstream
+				ss<< m_calculator.getAction(i).m_dValue;
+				std::string stdNum = ss.str();
 				
 				strNumber = stdNum.c_str();
 				if(m_DisplayHistory.IsEmpty())
@@ -342,40 +345,40 @@ void CCalculatorDlg::createHistoryText()
 					m_DisplayHistory = (CString("")+strNumber);
 			}
 			break;
-		case Calculator::ActionType::Plus:
+		case ActionType::Plus:
 			m_DisplayHistory += " +";
 			break;
-		case Calculator::ActionType::Minus:
+		case ActionType::Minus:
 			m_DisplayHistory += " -";
 			break;
-		case Calculator::ActionType::Multiply:
+		case ActionType::Multiply:
 			m_DisplayHistory += " x";
 			break;
-		case Calculator::ActionType::Divide:
+		case ActionType::Divide:
 			m_DisplayHistory += " /";
 			break;
-		case Calculator::ActionType::Equals:
+		case ActionType::Equals:
 			m_DisplayHistory += " =";
 			break;
-		case Calculator::ActionType::None:
+		case ActionType::None:
 			break;
 		}
 	}
 };
 
-void CCalculatorDlg::dotOperation(Calculator::ActionType operation, bool handleNumber)
+void CCalculatorDlg::dotOperation(ActionType operation, bool handleNumber)
 {
 	if(m_error_Input)
 		return;
 	UpdateData();
-	Calculator::Action input;
+	Calculator::sAction input;
 	if (handleNumber){
 
-		input.actionType == Calculator::ActionType::Number;
-		input.value == _wtof(m_DisplayResult);
+		input.m_actionType = ActionType::Number;
+		input.m_dValue = _wtof(m_DisplayResult);
 		m_calculator.addInput(input);
 	}
-	input.actionType = operation;
+	input.m_actionType = operation;
 	m_error_Input = false;
 	try
 	{
@@ -415,7 +418,7 @@ void CCalculatorDlg::dotOperation(Calculator::ActionType operation, bool handleN
 	}
 	// update output
 	createHistoryText();
-	if (operation == Calculator::ActionType::Equals)
+	if (operation == ActionType::Equals)
 	{
 		if (m_error_Input)
 			m_DisplayHistory += " ";
@@ -426,25 +429,25 @@ void CCalculatorDlg::dotOperation(Calculator::ActionType operation, bool handleN
 }
 void CCalculatorDlg::OnBnClickedButtonPlus()
 {
-	dotOperation(Calculator::ActionType::Plus);
+	dotOperation(ActionType:: Plus);
 }
 
 
 void CCalculatorDlg::OnBnClickedButtonMinus()
 {
-	dotOperation(Calculator::ActionType::Minus);
+	dotOperation(ActionType:: Minus);
 }
 
 
 void CCalculatorDlg::OnBnClickedButtonMultiply()
 {
-	dotOperation(Calculator::ActionType::Multiply);
+	dotOperation(ActionType::Multiply);
 }
 
 
 void CCalculatorDlg::OnBnClickedButtonDivided()
 {
-	dotOperation(Calculator::ActionType::Divide);
+	dotOperation(ActionType::Divide);
 }
 
 
@@ -456,5 +459,5 @@ void CCalculatorDlg::OnBnClickedButtonClear()
 
 void CCalculatorDlg::OnBnClickedButtonEqual()
 {
-	dotOperation(Calculator::ActionType::Equals);
+	dotOperation(ActionType::Equals);
 }

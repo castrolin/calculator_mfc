@@ -36,22 +36,39 @@ private:
 };
 //**********************************************************
 
+enum ActionType{Number, Plus, Minus, Multiply, Divide, Equals, None};//enum ActionType : char {Number, Plus, Minus, Multiply, Divide, Equals, None};
+
+
 
 class Calculator
 {
 public:
 	// ActionType: what has been entered from the calculator
 	// version too old to use enum class!!!!!!!!!!!
-	enum ActionType : char {Number, Plus, Minus, Multiply, Divide, Equals, None};
-	struct Action
+	
+	struct sAction
 	{
-		ActionType actionType;
-		double value;
-	};
+		ActionType m_actionType;
+		double m_dValue;
 
+		Calculator::sAction(ActionType nType, double dValue)
+		{
+			m_actionType = nType;
+			m_dValue = dValue;
+
+		}	
+
+		Calculator::sAction()
+		{
+			m_actionType = None;
+			m_dValue = 0.0;
+
+		}	
+
+	};
 	void reset();
-	bool addInput(const struct Action& input);//addInput(const struct Action& input);
-	struct Action getLastInput() const;
+	bool addInput(const struct Calculator::sAction& input);//addInput(const struct Action& input);
+	struct Calculator::sAction getLastInput() const;
 	// Current (partial) result as much as it can be calculated. Terms results are not
 	// taken into account until the term has finished: 3 + 2 X 5 would return 3 because
 	// the term calculation is not finished.
@@ -61,7 +78,7 @@ public:
 	bool isOperation(ActionType action) const;
 	// actions
 	int getActionsSize() { return static_cast<int>(m_actions.size()); }
-	const Action& getAction(int i) { return m_actions.at(i);  }
+	const Calculator::sAction& getAction(int i) { return m_actions.at(i);  }
 private:
 	bool isTerm(ActionType action) const;
 	bool isExpression(ActionType action) const;
@@ -91,12 +108,12 @@ private:
 		double getValue() const { return m_value; }
 		bool hasValue() const { return m_hasValue; }
 	private:
-		bool m_hasValue; // = false;
+		bool m_hasValue; // = false; in here cannot add the initial value ?
 		double m_value;
 	};
 
 	// Data members:
-	std::vector<Action> m_actions; // all the actions user has inputted (see ActionType)
+	std::vector<Calculator::sAction> m_actions; // all the actions user has inputted (see ActionType)
 	// m_leftExpression is always the left hand side of the expression. An example:
 	// 5 -> m_leftExpression = ActionType::None (reset) (*)
 	// 5 + 3 + -> m_leftExpression = 8

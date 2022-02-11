@@ -94,13 +94,24 @@ BOOL CCalculatorApp::InitInstance()
 
 //Setting 
 
-//**********PROBLEM IN HERE**********
-Calculator::Action Calculator::getLastInput() const 
-{
-	return m_actions.size() <= 0 ? Action{ActionType::None, 0.0} : m_actions.back();
-	/*
-	c2143 c2275 c4482 c 143
-	*/
+//**********PROBLEM IN HERE****** ****
+
+Calculator::sAction Calculator::getLastInput() const 
+{	
+	/*if( m_actions.size() <= 0){
+		getLastInput().actionType == None;
+		getLastInput().value == 0;
+		return getLastInput();
+	}
+	else
+		m_actions.back();*/
+
+	if(m_actions.size() <= 0)
+	{
+		return Calculator::sAction (ActionType::None, 0.0);;
+	}	
+
+	return m_actions.back();
 }
 //***********************************
 
@@ -128,11 +139,11 @@ bool Calculator::isExpression(ActionType action) const
 	return(action == ActionType::Plus || action == ActionType::Minus);
 }
 
-Calculator::ActionType Calculator::getLastOperation()
+ActionType Calculator::getLastOperation()
 {
 	for(auto op= m_actions.rbegin(); op!= m_actions.rend(); ++op){ // op mean is OPeration
-		if(isOperation(op->actionType)){
-			return op-> actionType;
+		if(isOperation(op->m_actionType)){
+			return op-> m_actionType;
 		}
 	}
 	return ActionType::None;	
@@ -140,91 +151,91 @@ Calculator::ActionType Calculator::getLastOperation()
 
 double Calculator::getCurrentResult() const
 {
-	return m_leftExpression.hasValue() ? m_leftExpression.getValue() : m_leftTerm.getValue();
+	return m_leftExpression.hasValue() ? m_leftExpression.getValue(): m_leftTerm.getValue();
 }
 
-bool Calculator::addInput(const Action& input)
+bool Calculator::addInput(const Calculator::sAction& input)
 {
-	const Calculator::Action lastInput = getLastInput();
+	const Calculator::sAction lastInput = Calculator::getLastInput();
 
-	if(input.actionType == ActionType::Number){
-		if(lastInput.actionType != ActionType::Number){
+	if(input.m_actionType == ActionType::Number){
+		if(lastInput.m_actionType != ActionType::Number){
 			m_actions.push_back(input);
 		}
 	}
-	else if (isOperation(input.actionType)){
+	else if (isOperation(input.m_actionType)){
 
-		if(lastInput.actionType == ActionType::Number){
+		if(lastInput.m_actionType == ActionType::Number){
 
 			ActionType lastOperation = getLastOperation();
 
 			switch(lastOperation){
 
 			case ActionType::Plus:
-				if(isExpression(input.actionType) || input.actionType == ActionType::Equals){
-					m_leftExpression.add(lastInput.value);
+				if(isExpression(input.m_actionType) || input.m_actionType == ActionType::Equals){
+					m_leftExpression.add(lastInput.m_dValue);
 					m_leftTerm.reset();
 				}
-				else if (isTerm(input.actionType)){
-					m_leftTerm.set(lastInput.value);
+				else if (isTerm(input.m_actionType)){
+					m_leftTerm.set(lastInput.m_dValue);
 				}
 				break;
 
 			case ActionType::Minus:
-				if(isExpression(input.actionType) || input.actionType == ActionType::Equals){
-					m_leftExpression.add(-lastInput.value);
+				if(isExpression(input.m_actionType) || input.m_actionType == ActionType::Equals){
+					m_leftExpression.add(-lastInput.m_dValue);
 					m_leftTerm.reset();
 				}
-				else if (isTerm(input.actionType)){
-					m_leftTerm.set(-lastInput.value);
+				else if (isTerm(input.m_actionType)){
+					m_leftTerm.set(-lastInput.m_dValue);
 				}
 				break;
 			case ActionType::Multiply:
-				if(isExpression(input.actionType) || input.actionType == ActionType::Equals){
-					m_leftExpression.add(m_leftTerm.getValue() * lastInput.value);
+				if(isExpression(input.m_actionType) || input.m_actionType == ActionType::Equals){
+					m_leftExpression.add(m_leftTerm.getValue() * lastInput.m_dValue);
 					m_leftTerm.reset();
 				}
-				else if (isTerm(input.actionType)){
-					m_leftTerm.multiplyBy(lastInput.value);
+				else if (isTerm(input.m_actionType)){
+					m_leftTerm.multiplyBy(lastInput.m_dValue);
 				}
 				break;
 			case ActionType::Divide:
 
-				if(isExpression(input.actionType) || input.actionType == ActionType::Equals){
-					if (lastInput.value == 0.0){
+				if(isExpression(input.m_actionType) || input.m_actionType == ActionType::Equals){
+					if (lastInput.m_dValue == 0.0){
 						CalculatorException divByZeroException("Error: Cannot Divided by zero",
 								CalculatorException::ExceptionType::DividedByZero);
 						throw divByZeroException;
 					}
 					else{
-						m_leftExpression.add(m_leftTerm.getValue() / lastInput.value);
+						m_leftExpression.add(m_leftTerm.getValue() / lastInput.m_dValue);
 						m_leftTerm.reset();
 					}
 					
 				}
-				else if (isTerm(input.actionType)){
-					m_leftTerm.set(1.0/lastInput.value);
+				else if (isTerm(input.m_actionType)){
+					m_leftTerm.set(1.0/lastInput.m_dValue);
 				}
 				break;
 
 			case ActionType::Equals:
-				if(isTerm(input.actionType)){
+				if(isTerm(input.m_actionType)){
 					m_leftExpression.reset();
-					m_leftTerm.set(lastInput.value);
+					m_leftTerm.set(lastInput.m_dValue);
 				}
-				else if (isExpression(input.actionType)){
-					m_leftExpression.set(lastInput.value);
+				else if (isExpression(input.m_actionType)){
+					m_leftExpression.set(lastInput.m_dValue);
 					m_leftTerm.reset();
 				}
 				break;
 
 			case ActionType::None:
-				if(isTerm(input.actionType)){
+				if(isTerm(input.m_actionType)){
 					m_leftExpression.reset();
-					m_leftTerm.set(lastInput.value);
+					m_leftTerm.set(lastInput.m_dValue);
 				}
-				else if (isExpression(input.actionType)){
-					m_leftExpression.set(lastInput.value);
+				else if (isExpression(input.m_actionType)){
+					m_leftExpression.set(lastInput.m_dValue);
 					m_leftTerm.reset();
 				}
 				break;

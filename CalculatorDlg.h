@@ -50,17 +50,17 @@ public:
 	afx_msg void OnBnClickedButtonEqual();
 
 private:
-	//*****INITIALIZATION of VARIABLW ????********
+	//*****INITIALIZATION of VARIABLE ????********
 	// user defined variable
 	bool m_error_Input;
 	BOOL m_firstDigitEntered;
 	//const CString m_OutputResetString = {"0"};
 
-	// user defined funciton
+	// user defined function
 	void AddDigit(char digit);
 	void reset();
 	void resetOutput();
-	void CCalculatorDlg::dotOperation(Calculator::ActionType operation, bool handleNumber);
+	void CCalculatorDlg::dotOperation(ActionType operation, bool handleNumber= true);
 	void CCalculatorDlg:: createHistoryText();
 
 
