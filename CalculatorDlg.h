@@ -89,6 +89,7 @@ private:
 
 	CString m_DisplayResult;
 	CString m_DisplayHistory;
+	CString h;
 
 
 	CEdit m_EditOutput;

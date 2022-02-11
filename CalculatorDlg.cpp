@@ -265,62 +265,62 @@ void CCalculatorDlg::AddDigit(char digit){
 
 void CCalculatorDlg::OnBnClickedButtonNumberzero()
 {
-	// TODO: 北兜矪瞶盽Α祘Α絏
+	
 	AddDigit('0');
 
 }
 
 void CCalculatorDlg::OnBnClickedButtonNumberone()
 {
-	// TODO: 北兜矪瞶盽Α祘Α絏
+	
 	AddDigit('1');
 }
 
 void CCalculatorDlg::OnBnClickedButtonNumbertwo()
 {
-	// TODO: 北兜矪瞶盽Α祘Α絏
+	
 	AddDigit('2');
 }
 
 void CCalculatorDlg::OnBnClickedButtonNumberthree()
 {
-	// TODO: 北兜矪瞶盽Α祘Α絏
+	
 	AddDigit('3');
 }
 
 void CCalculatorDlg::OnBnClickedButtonNumberfour()
 {
-	// TODO: 北兜矪瞶盽Α祘Α絏
+	
 	AddDigit('4');
 }
 
 void CCalculatorDlg::OnBnClickedButtonNumberfive()
 {
-	// TODO: 北兜矪瞶盽Α祘Α絏
+	
 	AddDigit('5');
 }
 
 void CCalculatorDlg::OnBnClickedButtonNumbersix()
 {
-	// TODO: 北兜矪瞶盽Α祘Α絏
+	
 	AddDigit('6');
 }
 
 void CCalculatorDlg::OnBnClickedButtonNumberseven()
 {
-	// TODO: 北兜矪瞶盽Α祘Α絏
+
 	AddDigit('7');
 }
 
 void CCalculatorDlg::OnBnClickedButtonNumbereight()
 {
-	// TODO: 北兜矪瞶盽Α祘Α絏
+	
 	AddDigit('8');
 }
 
 void CCalculatorDlg::OnBnClickedButtonNumbernine()
 {
-	// TODO: 北兜矪瞶盽Α祘Α絏
+	
 	AddDigit('9');
 }
 // add the algorithm function (user define function) in this block
@@ -339,31 +339,45 @@ void CCalculatorDlg::createHistoryText()
 				std::string stdNum = ss.str();
 				
 				strNumber = stdNum.c_str();
+
 				if(m_DisplayHistory.IsEmpty())
 					m_DisplayHistory = strNumber;
 				else
-					m_DisplayHistory = (CString("")+strNumber);
+					m_DisplayHistory += (CString("")+strNumber);	
 			}
 			break;
+
 		case ActionType::Plus:
 			m_DisplayHistory += " +";
 			break;
+
 		case ActionType::Minus:
 			m_DisplayHistory += " -";
 			break;
+
 		case ActionType::Multiply:
 			m_DisplayHistory += " x";
 			break;
+
 		case ActionType::Divide:
 			m_DisplayHistory += " /";
 			break;
+
 		case ActionType::Equals:
+			
+			if (m_error_Input)
+				m_DisplayHistory += " ";
+
 			m_DisplayHistory += " =";
+			m_DisplayHistory += m_DisplayResult;
+			m_DisplayHistory += "\r\n";
 			break;
+
 		case ActionType::None:
 			break;
 		}
 	}
+
 };
 
 void CCalculatorDlg::dotOperation(ActionType operation, bool handleNumber)
@@ -417,15 +431,17 @@ void CCalculatorDlg::dotOperation(ActionType operation, bool handleNumber)
 		m_error_Input = true;
 	}
 	// update output
-	createHistoryText();
-	if (operation == ActionType::Equals)
+	
+	/*if (operation == ActionType::Equals)
 	{
 		if (m_error_Input)
 			m_DisplayHistory += " ";
+
 		m_DisplayHistory += m_DisplayResult;
-	}
+	}*/
+	createHistoryText();
 	UpdateData(FALSE);
-	m_firstDigitEntered = FALSE;
+	m_firstDigitEntered = FALSE; //FALSE
 }
 void CCalculatorDlg::OnBnClickedButtonPlus()
 {
@@ -460,4 +476,6 @@ void CCalculatorDlg::OnBnClickedButtonClear()
 void CCalculatorDlg::OnBnClickedButtonEqual()
 {
 	dotOperation(ActionType::Equals);
+	//UpdateData(TRUE);
+	
 }
